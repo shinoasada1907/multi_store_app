@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:multi_store/views/screens/main_screens/cart_sceens.dart';
 import 'package:multi_store/views/screens/main_screens/categories_screen.dart';
 import 'package:multi_store/views/screens/main_screens/home_page_screen.dart';
+import 'package:multi_store/views/screens/main_screens/stores_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,12 +17,8 @@ class _HomePageState extends State<HomePage> {
   final List _screens = const [
     HomePageScreen(),
     CategoryScreen(),
-    Center(
-      child: Text('3'),
-    ),
-    Center(
-      child: Text('4'),
-    ),
+    StoreScreen(),
+    CartScreen(),
     Center(
       child: Text('5'),
     ),

@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:multi_store/models/subject/listitem.dart';
+import 'package:multi_store/views/screens/categories_screens/accessory_category.dart';
+import 'package:multi_store/views/screens/categories_screens/bag_category.dart';
+import 'package:multi_store/views/screens/categories_screens/beauty_category.dart';
+import 'package:multi_store/views/screens/categories_screens/electronic_category.dart';
+import 'package:multi_store/views/screens/categories_screens/homeandgarden_category.dart';
+import 'package:multi_store/views/screens/categories_screens/kid_category.dart';
+import 'package:multi_store/views/screens/categories_screens/men_category.dart';
+import 'package:multi_store/views/screens/categories_screens/shoes_category.dart';
+import 'package:multi_store/views/screens/categories_screens/women_category.dart';
 import 'package:multi_store/views/widgets/search_widget.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -10,25 +19,39 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
+  final PageController _pageController = PageController();
+
+  @override
+  void initState() {
+    for (var element in items) {
+      element.iselected = false;
+    }
+    setState(() {
+      items[0].iselected = true;
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Colors.white,
         title: const SearchWidget(),
       ),
       body: Stack(
         children: [
           Positioned(
-            child: sideNavigator(size),
             bottom: 0,
             left: 0,
+            child: sideNavigator(size),
           ),
           Positioned(
-            child: cateView(size),
             bottom: 0,
             right: 0,
+            child: cateView(size),
           ),
         ],
       ),
@@ -37,21 +60,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   Widget sideNavigator(Size size) {
     return SizedBox(
-      height: size.height * 0.9,
+      height: size.height * 0.8,
       width: size.width * 0.2,
       child: ListView.builder(
         itemCount: items.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              for (var element in items) {
-                //duyệt lại các item về lại trạng thái ban đầu
-                element.iselected = false;
-              }
-              setState(() {
-                //thay đổi trạng thái của item khi được chọn
-                items[index].iselected = true;
-              });
+              _pageController.animateToPage(
+                index,
+                duration: const Duration(milliseconds: 100),
+                curve: Curves.bounceIn,
+              );
             },
             child: Container(
               color: items[index].iselected == true
@@ -61,7 +81,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
               child: Center(
                 child: Text(
                   items[index].label.toString(),
-                  style: const TextStyle(color: Colors.black),
+                  style: TextStyle(
+                    color: items[index].iselected == true
+                        ? Colors.lightBlue
+                        : Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -73,9 +98,32 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   Widget cateView(Size size) {
     return Container(
-      height: size.height * 0.9,
+      height: size.height * 0.8,
       width: size.width * 0.8,
       color: Colors.white,
+      child: PageView(
+        controller: _pageController,
+        scrollDirection: Axis.vertical,
+        onPageChanged: (value) {
+          for (var element in items) {
+            element.iselected = false;
+          }
+          setState(() {
+            items[value].iselected = true;
+          });
+        },
+        children: const [
+          MenCategory(),
+          Womencategory(),
+          ShoesCategory(),
+          BagCategory(),
+          ElectronicCategory(),
+          Accessorycategory(),
+          HomeAndGardencategory(),
+          Kidcategory(),
+          BeautyCategory(),
+        ],
+      ),
     );
   }
 }
