@@ -29,18 +29,20 @@ class SubCateModel extends StatelessWidget {
           ),
         );
       },
-      child: Column(
-        children: [
-          SizedBox(
-            height: 70,
-            width: 70,
-            child: Image(image: AssetImage(assetsName)),
-          ),
-          Text(
-            cateLabel,
-            style: const TextStyle(overflow: TextOverflow.ellipsis),
-          ),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 70,
+              width: 70,
+              child: Image(image: AssetImage(assetsName)),
+            ),
+            Text(
+              cateLabel,
+              style: const TextStyle(overflow: TextOverflow.ellipsis),
+            ),
+          ],
+        ),
       ),
     );
   }

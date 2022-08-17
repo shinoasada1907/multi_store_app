@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:multi_store/views/screens/main_screens/cart_sceens.dart';
 import 'package:multi_store/views/screens/main_screens/categories_screen.dart';
+import 'package:multi_store/views/screens/main_screens/dashboard_screen.dart';
 import 'package:multi_store/views/screens/main_screens/home_page_screen.dart';
-import 'package:multi_store/views/screens/main_screens/profile.dart';
 import 'package:multi_store/views/screens/main_screens/stores_screen.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class SupplierHomePage extends StatefulWidget {
+  const SupplierHomePage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<SupplierHomePage> createState() => _SupplierHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _SupplierHomePageState extends State<SupplierHomePage> {
   int _selecteditem = 0;
 
   final List _screens = const [
     HomePageScreen(),
     CategoryScreen(),
     StoreScreen(),
-    CartScreen(),
-    ProfileScreen(),
+    DashboardScreen(),
+    Center(
+      child: Text('Upload'),
+    )
   ];
 
   @override
@@ -46,12 +47,12 @@ class _HomePageState extends State<HomePage> {
             label: 'Stores',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Cart',
+            icon: Icon(Icons.dashboard),
+            label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.upload),
+            label: 'Upload',
           ),
         ],
         onTap: (index) {

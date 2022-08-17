@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:multi_store/views/screens/main_screens/home_screen.dart';
+import 'package:multi_store/views/screens/main_screens/supplier_home_screen.dart';
+
+import 'package:multi_store/views/screens/main_screens/welcome_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,9 +18,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter multi store',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lightBlue,
       ),
-      home: const HomePage(),
+      // home: const WelcomeScreen(),
+      initialRoute: '/welcome_screen',
+      routes: {
+        '/welcome_screen': (context) => const WelcomeScreen(),
+        '/user_screen': (context) => const HomePage(),
+        '/supplier_screen': (context) => const SupplierHomePage(),
+      },
     );
   }
 }
