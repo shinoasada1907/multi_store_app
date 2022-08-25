@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store/views/widgets/google_facebook_login_widget.dart';
 import 'package:multi_store/views/widgets/yellowbutton_widget.dart';
@@ -10,6 +13,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  bool processing = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,7 +143,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         YellowButton(
                           name: 'Sign Up',
                           width: 0.25,
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(
+                                context, '/customer_register');
+                          },
                         ),
                         const Image(
                           image: AssetImage('assets/images/inapp/logo.jpg'),
@@ -172,14 +179,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           image: AssetImage('assets/images/inapp/facebook.jpg'),
                         ),
                       ),
-                      GoogleFacebookLogin(
-                          label: 'Guest',
-                          onPressed: () {},
-                          childs: const Icon(
-                            Icons.person,
-                            color: Colors.lightBlue,
-                            size: 50,
-                          )),
+                      processing == true
+                          ? const CircularProgressIndicator()
+                          : GoogleFacebookLogin(
+                              label: 'Guest',
+                              onPressed: () async {
+                                setState(() {
+                                  processing = true;
+                                });
+                                await FirebaseAuth.instance.signInAnonymously();
+
+                                Navigator.pushReplacementNamed(
+                                    context, '/user_screen');
+                              },
+                              childs: const Icon(
+                                Icons.person,
+                                color: Colors.lightBlue,
+                                size: 50,
+                              )),
                     ],
                   ),
                 ),

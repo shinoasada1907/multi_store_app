@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_store/models/subject/showdialog_widget.dart';
 import 'package:multi_store/views/screens/customer_screens/customer_order_screen.dart';
 import 'package:multi_store/views/screens/customer_screens/wishlist.dart';
 import 'package:multi_store/views/screens/main_screens/cart_sceens.dart';
@@ -262,9 +264,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               const YelloDivider(),
                               RepeatedListTile(
-                                onPressed: () {
-                                  Navigator.pushReplacementNamed(
-                                      context, '/welcome_screen');
+                                onPressed: () async {
+                                  MyShowDialog.showMyDialog(
+                                    context: context,
+                                    content: 'Are your sure to log out?',
+                                    title: 'Log out',
+                                    tabNo: () => Navigator.pop(context),
+                                    tabYes: () async {
+                                      FirebaseAuth.instance.signOut();
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacementNamed(
+                                          context, '/welcome_screen');
+                                    },
+                                  );
                                 },
                                 title: 'Log Out',
                                 icon: Icons.logout,
