@@ -2,10 +2,12 @@
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_store/views/widgets/snackbar.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import '../../widgets/auth_widget.dart';
 
@@ -20,6 +22,9 @@ class _CustomerRegisterState extends State<CustomerRegister> {
   late String name;
   late String email;
   late String password;
+  late String profileImage;
+  late String _uid;
+  bool processing = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
@@ -29,6 +34,9 @@ class _CustomerRegisterState extends State<CustomerRegister> {
 
   XFile? _imageFile;
   dynamic _pickedImageError;
+
+  CollectionReference customer =
+      FirebaseFirestore.instance.collection('customers');
 
   void _pickImageFromCamera() async {
     try {
@@ -44,6 +52,7 @@ class _CustomerRegisterState extends State<CustomerRegister> {
       setState(() {
         _pickedImageError = e;
       });
+      // ignore: avoid_print
       print(_pickedImageError);
     }
   }
@@ -62,34 +71,72 @@ class _CustomerRegisterState extends State<CustomerRegister> {
       setState(() {
         _pickedImageError = e;
       });
+      // ignore: avoid_print
       print(_pickedImageError);
     }
   }
 
   void signUp() async {
+    setState(() {
+      processing = true;
+    });
     if (_formKey.currentState!.validate()) {
       if (_imageFile != null) {
         try {
+          //Đăng ký tài khoản
           await FirebaseAuth.instance
               .createUserWithEmailAndPassword(email: email, password: password);
-          Navigator.pushReplacementNamed(context, '/user_screen');
+
+          //Upload profile tài khoản
+          //Tạo thư mục quản lý ảnh trên storage
+          firebase_storage.Reference ref = firebase_storage
+              .FirebaseStorage.instance
+              .ref('cust-images/$email.jpg');
+          //Put ảnh lên folder vừa tạo
+          await ref.putFile(File(_imageFile!.path));
+          //Download đường dẫn sau khi put ảnh lên folder
+          profileImage = await ref.getDownloadURL();
+          //Upload thông tin lên document
+          _uid = FirebaseAuth.instance.currentUser!.uid;
+          await customer.doc(_uid).set({
+            'name': name,
+            'email': email,
+            'profileimage': profileImage,
+            'phone': '',
+            'address': '',
+            'cid': _uid,
+          });
+
           _formKey.currentState!.reset();
           setState(() {
             _imageFile = null;
           });
+          await Navigator.pushReplacementNamed(context, '/user_screen');
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
+            setState(() {
+              processing = false;
+            });
             MessageHandler.showSnackSar(
                 _scaffoldKey, 'The password provided is too weak.');
           } else if (e.code == 'email-already-in-use') {
+            setState(() {
+              processing = false;
+            });
             MessageHandler.showSnackSar(
                 _scaffoldKey, 'The account already exists for that email.');
           }
         }
       } else {
+        setState(() {
+          processing = false;
+        });
         MessageHandler.showSnackSar(_scaffoldKey, 'Please choose first image');
       }
     } else {
+      setState(() {
+        processing = false;
+      });
       MessageHandler.showSnackSar(_scaffoldKey, 'Please fill all fields');
     }
   }
@@ -250,14 +297,19 @@ class _CustomerRegisterState extends State<CustomerRegister> {
                       HaveAcount(
                         haveaccount: 'already have account',
                         actionLabel: 'Log In',
-                        onPressed: () {},
-                      ),
-                      AuthMainButton(
-                        labelbutton: 'Sign up',
                         onPressed: () {
-                          signUp();
+                          Navigator.pushReplacementNamed(
+                              context, '/customer_login');
                         },
-                      )
+                      ),
+                      processing == true
+                          ? const CircularProgressIndicator()
+                          : AuthMainButton(
+                              labelbutton: 'Sign up',
+                              onPressed: () {
+                                signUp();
+                              },
+                            )
                     ],
                   ),
                 ),

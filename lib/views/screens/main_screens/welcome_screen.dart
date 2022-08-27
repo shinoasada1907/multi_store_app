@@ -136,7 +136,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             width: 0.25,
                             onPressed: () {
                               Navigator.pushReplacementNamed(
-                                  context, '/user_screen');
+                                  context, '/customer_login');
                             },
                           ),
                         ),

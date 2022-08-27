@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store/views/screens/main_screens/cart_sceens.dart';
 import 'package:multi_store/views/screens/main_screens/categories_screen.dart';
@@ -15,12 +16,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selecteditem = 0;
 
-  final List _screens = const [
-    HomePageScreen(),
-    CategoryScreen(),
-    StoreScreen(),
-    CartScreen(),
-    ProfileScreen(),
+  final List _screens = [
+    const HomePageScreen(),
+    const CategoryScreen(),
+    const StoreScreen(),
+    const CartScreen(),
+    ProfileScreen(
+      documentId: FirebaseAuth.instance.currentUser!.uid,
+    ),
   ];
 
   @override

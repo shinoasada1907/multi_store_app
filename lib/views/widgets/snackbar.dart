@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class MessageHandler {
-  static void showSnackSar(var _scaffoldKey, String mess) {
-    _scaffoldKey.currentState!.hideCurrentSnackBar();
-    _scaffoldKey.currentState!.showSnackBar(
+  static void showSnackSar(var scaffoldKey, String mess) {
+    scaffoldKey.currentState!.hideCurrentSnackBar();
+    scaffoldKey.currentState!.showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 2),
         backgroundColor: Colors.lightBlue,
