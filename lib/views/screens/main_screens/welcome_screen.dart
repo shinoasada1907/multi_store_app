@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store/views/widgets/google_facebook_login_widget.dart';
@@ -14,6 +15,10 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   bool processing = false;
+  CollectionReference customer =
+      FirebaseFirestore.instance.collection('customers');
+  late String _uid;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +98,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               width: 0.25,
                               onPressed: () {
                                 Navigator.pushReplacementNamed(
-                                    context, '/supplier_screen');
+                                    context, '/supplier_login');
                               },
                             ),
                             Padding(
@@ -101,7 +106,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               child: YellowButton(
                                 name: 'Sign Up',
                                 width: 0.25,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/supplier_register');
+                                },
                               ),
                             )
                           ],
@@ -187,7 +195,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 setState(() {
                                   processing = true;
                                 });
-                                await FirebaseAuth.instance.signInAnonymously();
+                                await FirebaseAuth.instance
+                                    .signInAnonymously()
+                                    .whenComplete(() async {
+                                  _uid = FirebaseAuth.instance.currentUser!.uid;
+                                  await customer.doc(_uid).set({
+                                    'name': '',
+                                    'email': '',
+                                    'profileimage': '',
+                                    'phone': '',
+                                    'address': '',
+                                    'cid': _uid,
+                                  });
+                                });
 
                                 Navigator.pushReplacementNamed(
                                     context, '/user_screen');

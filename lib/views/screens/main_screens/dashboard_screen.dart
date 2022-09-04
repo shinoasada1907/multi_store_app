@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store/views/screens/dashborard_components/balance_screen.dart';
 import 'package:multi_store/views/screens/dashborard_components/edit_profile_screen.dart';
@@ -6,6 +9,8 @@ import 'package:multi_store/views/screens/dashborard_components/my_store_screen.
 import 'package:multi_store/views/screens/dashborard_components/order_sceen.dart';
 import 'package:multi_store/views/screens/dashborard_components/static_screen.dart';
 import 'package:multi_store/views/widgets/appbar_widget.dart';
+
+import '../../../models/subject/showdialog_widget.dart';
 
 List<Widget> pages = const [
   MyStoreScreen(),
@@ -47,8 +52,18 @@ class DashboardScreen extends StatelessWidget {
         title: const TitleAppbar(title: 'Dashboard'),
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/welcome_screen');
+            onPressed: () async {
+              MyShowDialog.showMyDialog(
+                context: context,
+                content: 'Are your sure to log out?',
+                title: 'Log out',
+                tabNo: () => Navigator.pop(context),
+                tabYes: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, '/welcome_screen');
+                },
+              );
             },
             icon: const Icon(Icons.logout),
             color: Colors.white,
@@ -89,12 +104,14 @@ class DashboardScreen extends StatelessWidget {
                       Text(
                         labels[index].toUpperCase(),
                         style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Acme',
-                            color: Colors.lightBlue,
-                            letterSpacing: 2),
-                      )
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Acme',
+                          color: Colors.lightBlue,
+                          letterSpacing: 2,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ],
                   ),
                 ),

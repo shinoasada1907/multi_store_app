@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -89,15 +91,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     const EdgeInsets.only(top: 25, left: 30),
                                 child: Row(
                                   children: [
-                                    CircleAvatar(
-                                      radius: 50,
-                                      backgroundImage:
-                                          NetworkImage(data['profileimage']),
-                                    ),
+                                    data['profileimage'] == ''
+                                        ? const CircleAvatar(
+                                            radius: 50,
+                                            backgroundImage: AssetImage(
+                                                'assets/images/inapp/guest.jpg'),
+                                          )
+                                        : CircleAvatar(
+                                            radius: 50,
+                                            backgroundImage: NetworkImage(
+                                                data['profileimage']),
+                                          ),
                                     Padding(
                                       padding: const EdgeInsets.only(left: 25),
                                       child: Text(
-                                        data['name'].toUpperCase(),
+                                        data['name'] == ''
+                                            ? 'guest'.toUpperCase()
+                                            : data['name'].toUpperCase(),
                                         style: const TextStyle(
                                             fontSize: 24,
                                             fontWeight: FontWeight.w600),
@@ -249,19 +259,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   children: [
                                     RepeatedListTile(
                                       title: 'Email Address',
-                                      subtitle: data['email'],
+                                      subtitle: data['email'] == ''
+                                          ? 'abd@example.com'
+                                          : data['email'],
                                       icon: Icons.email,
                                     ),
                                     const YelloDivider(),
                                     RepeatedListTile(
                                       title: 'Phone',
-                                      subtitle: data['phone'],
+                                      subtitle: data['phone'] == ''
+                                          ? 'example: +84111111111'
+                                          : data['phone'],
                                       icon: Icons.phone,
                                     ),
                                     const YelloDivider(),
                                     RepeatedListTile(
                                       title: 'Address',
-                                      subtitle: data['address'],
+                                      subtitle: data['address'] == ''
+                                          ? 'HCM, Viet Nam'
+                                          : data['address'],
                                       icon: Icons.location_pin,
                                     ),
                                   ],
@@ -296,7 +312,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           title: 'Log out',
                                           tabNo: () => Navigator.pop(context),
                                           tabYes: () async {
-                                            FirebaseAuth.instance.signOut();
+                                            await FirebaseAuth.instance
+                                                .signOut();
                                             Navigator.pop(context);
                                             Navigator.pushReplacementNamed(
                                                 context, '/welcome_screen');

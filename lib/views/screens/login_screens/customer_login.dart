@@ -29,7 +29,6 @@ class _CustomerLoginState extends State<CustomerLogin> {
     });
     if (_formKey.currentState!.validate()) {
       try {
-        //Đăng ký tài khoản
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
 
