@@ -1,9 +1,10 @@
-// ignore_for_file: avoid_print, duplicate_ignore
+// ignore_for_file: avoid_print, duplicate_ignore, sort_child_properties_last
 
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:multi_store/models/utilities/categ_list.dart';
 import 'package:multi_store/views/widgets/snackbar.dart';
 
 class UploadProductScreen extends StatefulWidget {
@@ -68,6 +69,32 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
     }
   }
 
+  void selectcatagory(String? value) {
+    if (value == 'select category') {
+      subCateList = [];
+    } else if (value == 'men') {
+      subCateList = men;
+    } else if (value == 'women') {
+      subCateList = women;
+    } else if (value == 'electronics') {
+      subCateList = electronics;
+    } else if (value == 'shoes') {
+      subCateList = shoes;
+    } else if (value == 'home & garden') {
+      subCateList = homeandgarden;
+    } else if (value == 'beauty') {
+      subCateList = beauty;
+    } else if (value == 'kids') {
+      subCateList = kids;
+    } else if (value == 'bags') {
+      subCateList = bags;
+    }
+    setState(() {
+      mainCateValue = value!;
+      subCateValue = 'subcategory';
+    });
+  }
+
   Widget previewImage() {
     if (imageFileList!.isNotEmpty) {
       return ListView.builder(
@@ -121,8 +148,30 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('select main category'),
+                              const Text(
+                                'select main category',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                ),
+                              ),
+                              DropdownButton(
+                                iconSize: 40,
+                                iconEnabledColor: Colors.red,
+                                dropdownColor: Colors.lightBlue,
+                                value: mainCateValue,
+                                items: maincateg
+                                    .map<DropdownMenuItem<String>>((value) {
+                                  return DropdownMenuItem(
+                                    child: Text(value),
+                                    value: value,
+                                  );
+                                }).toList(),
+                                onChanged: (String? value) {
+                                  selectcatagory(value);
+                                },
+                              ),
                             ],
                           ),
                         ),
