@@ -104,7 +104,7 @@ class _SupplierRegisterState extends State<SupplierRegister> {
             'profileimage': storeLogo,
             'phone': '',
             'coverimage': '',
-            'cid': _uid,
+            'sid': _uid,
           });
 
           _formKey.currentState!.reset();
@@ -299,7 +299,7 @@ class _SupplierRegisterState extends State<SupplierRegister> {
                         actionLabel: 'Log In',
                         onPressed: () {
                           Navigator.pushReplacementNamed(
-                              context, '/customer_login');
+                              context, '/supplier_login');
                         },
                       ),
                       processing == true

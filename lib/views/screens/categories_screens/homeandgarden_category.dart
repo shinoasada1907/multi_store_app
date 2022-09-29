@@ -34,7 +34,7 @@ class HomeAndGardencategory extends StatelessWidget {
                           homeandgarden.length - 1,
                           (index) {
                             return SubCateModel(
-                                mainCateName: 'Home & Garden',
+                                mainCateName: 'homeandgarden',
                                 subCatename: homeandgarden[index + 1],
                                 assetsName:
                                     'assets/images/homegarden/home$index.jpg',

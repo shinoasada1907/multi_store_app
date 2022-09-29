@@ -1,11 +1,16 @@
-// ignore_for_file: avoid_print, duplicate_ignore, sort_child_properties_last
+// ignore_for_file: avoid_print, duplicate_ignore, sort_child_properties_last, depend_on_referenced_packages
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_store/models/utilities/categ_list.dart';
 import 'package:multi_store/views/widgets/snackbar.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path/path.dart' as path;
+import 'package:uuid/uuid.dart';
 
 class UploadProductScreen extends StatefulWidget {
   const UploadProductScreen({Key? key}) : super(key: key);
@@ -23,6 +28,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   late int quantity;
   late String proName;
   late String proDesc;
+  late String proId;
 
   String mainCateValue = 'select category';
   String subCateValue = 'subcategory';
@@ -30,7 +36,10 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
 
   final ImagePicker _picker = ImagePicker();
   List<XFile>? imageFileList = [];
+  List<String> imageUrlList = [];
   dynamic _pickedImageError;
+
+  bool processing = false;
 
   void _pickProductImage() async {
     try {
@@ -47,26 +56,72 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
     }
   }
 
-  void upLoadProduct() {
+  Future<void> uploadImage() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (imageFileList!.isNotEmpty) {
-        print('image list');
-        print('valid');
-        print(price);
-        print(quantity);
-        print(proName);
-        print(proDesc);
+        //thực hiện tạo vòng lập để add hình ảnh lên storage trên firebase
         setState(() {
-          imageFileList = [];
+          processing = true;
         });
-        _formKey.currentState!.reset();
+        try {
+          for (var images in imageFileList!) {
+            firebase_storage.Reference ref = firebase_storage
+                .FirebaseStorage.instance
+                .ref('products/${path.basename(images.path)}');
+
+            await ref.putFile(File(images.path)).whenComplete(() async {
+              await ref.getDownloadURL().then((value) {
+                imageUrlList.add(value);
+              });
+            });
+          }
+        } catch (e) {
+          print(e);
+        }
       } else {
         MessageHandler.showSnackSar(_scaffoldKey, 'Please pick images');
       }
     } else {
       MessageHandler.showSnackSar(_scaffoldKey, 'Please fill all field');
     }
+  }
+
+  void uploadData() async {
+    if (imageUrlList.isNotEmpty) {
+      CollectionReference productRef =
+          FirebaseFirestore.instance.collection('products');
+
+      proId = const Uuid().v4();
+
+      await productRef.doc(proId).set({
+        'productid': proId,
+        'maincateg': mainCateValue,
+        'subcateg': subCateValue,
+        'price': price,
+        'instock': quantity,
+        'proname': proName,
+        'prodesc': proDesc,
+        'sid': FirebaseAuth.instance.currentUser!.uid,
+        'proimages': imageUrlList,
+        'discount': 0
+      }).whenComplete(() {
+        setState(() {
+          processing = false;
+          imageFileList = [];
+          mainCateValue = 'select category';
+          subCateList = [];
+          imageUrlList = [];
+        });
+        _formKey.currentState!.reset();
+      });
+    } else {
+      print('No Image');
+    }
+  }
+
+  void uploadProduct() async {
+    await uploadImage().whenComplete(() => uploadData());
   }
 
   void selectcatagory(String? value) {
@@ -146,33 +201,76 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                                 ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'select main category',
-                                style: TextStyle(
-                                  color: Colors.red,
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.35,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      '* select main category',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    DropdownButton(
+                                      iconSize: 40,
+                                      iconEnabledColor: Colors.red,
+                                      dropdownColor: Colors.lightBlue.shade400,
+                                      value: mainCateValue,
+                                      items: maincateg
+                                          .map<DropdownMenuItem<String>>(
+                                              (value) {
+                                        return DropdownMenuItem(
+                                          child: Text(value),
+                                          value: value,
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? value) {
+                                        selectcatagory(value);
+                                      },
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              DropdownButton(
-                                iconSize: 40,
-                                iconEnabledColor: Colors.red,
-                                dropdownColor: Colors.lightBlue,
-                                value: mainCateValue,
-                                items: maincateg
-                                    .map<DropdownMenuItem<String>>((value) {
-                                  return DropdownMenuItem(
-                                    child: Text(value),
-                                    value: value,
-                                  );
-                                }).toList(),
-                                onChanged: (String? value) {
-                                  selectcatagory(value);
-                                },
-                              ),
-                            ],
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      '* select subcategory',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    DropdownButton(
+                                      iconSize: 40,
+                                      iconEnabledColor: Colors.red,
+                                      iconDisabledColor: Colors.black,
+                                      dropdownColor: Colors.lightBlue.shade400,
+                                      disabledHint:
+                                          const Text('select category'),
+                                      value: subCateValue,
+                                      items: subCateList
+                                          .map<DropdownMenuItem<String>>(
+                                              (value) {
+                                        return DropdownMenuItem(
+                                          child: Text(value),
+                                          value: value,
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          subCateValue = value!;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -300,13 +398,19 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
               ),
             ),
             FloatingActionButton(
-              onPressed: () {
-                upLoadProduct();
-              },
-              child: const Icon(
-                Icons.upload,
-                color: Colors.white,
-              ),
+              onPressed: processing == true
+                  ? null
+                  : () {
+                      uploadProduct();
+                    },
+              child: processing == true
+                  ? const CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                  : const Icon(
+                      Icons.upload,
+                      color: Colors.white,
+                    ),
             )
           ],
         ),

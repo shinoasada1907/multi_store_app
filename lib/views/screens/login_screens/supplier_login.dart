@@ -150,7 +150,7 @@ class _SupplierLoginState extends State<SupplierLogin> {
                         actionLabel: 'Sign Up',
                         onPressed: () {
                           Navigator.pushReplacementNamed(
-                              context, '/supplier_login');
+                              context, '/supplier_register');
                         },
                       ),
                       processing == true

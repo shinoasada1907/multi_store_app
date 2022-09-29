@@ -22,10 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter multi store',
-      theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
-      ),
+
       // home: const WelcomeScreen(),
       initialRoute: '/welcome_screen',
       routes: {

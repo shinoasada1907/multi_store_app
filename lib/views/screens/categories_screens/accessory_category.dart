@@ -34,7 +34,7 @@ class Accessorycategory extends StatelessWidget {
                           accessories.length - 1,
                           (index) {
                             return SubCateModel(
-                                mainCateName: 'Accessories',
+                                mainCateName: 'accessories',
                                 subCatename: accessories[index + 1],
                                 assetsName:
                                     'assets/images/accessories/accessories$index.jpg',

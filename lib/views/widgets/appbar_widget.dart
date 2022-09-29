@@ -24,12 +24,30 @@ class AppbarBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: const Icon(
-          Icons.arrow_back,
-          color: Colors.black,
-        ));
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      icon: const Icon(
+        Icons.arrow_back,
+        color: Colors.black,
+      ),
+    );
+  }
+}
+
+class LightBlueBackButton extends StatelessWidget {
+  const LightBlueBackButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      icon: const Icon(
+        Icons.arrow_back,
+        color: Colors.lightBlue,
+      ),
+    );
   }
 }

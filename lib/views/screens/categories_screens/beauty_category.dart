@@ -34,7 +34,7 @@ class BeautyCategory extends StatelessWidget {
                           beauty.length - 1,
                           (index) {
                             return SubCateModel(
-                                mainCateName: 'Beaty',
+                                mainCateName: 'beaty',
                                 subCatename: beauty[index + 1],
                                 assetsName:
                                     'assets/images/beauty/beauty$index.jpg',

@@ -34,7 +34,7 @@ class ShoesCategory extends StatelessWidget {
                           shoes.length - 1,
                           (index) {
                             return SubCateModel(
-                                mainCateName: 'Shoes',
+                                mainCateName: 'shoes',
                                 subCatename: shoes[index + 1],
                                 assetsName:
                                     'assets/images/shoes/shoes$index.jpg',

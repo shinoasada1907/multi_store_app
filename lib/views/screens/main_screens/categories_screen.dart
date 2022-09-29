@@ -87,6 +87,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         : Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),

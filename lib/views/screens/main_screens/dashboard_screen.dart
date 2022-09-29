@@ -5,20 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:multi_store/views/screens/dashborard_components/balance_screen.dart';
 import 'package:multi_store/views/screens/dashborard_components/edit_profile_screen.dart';
 import 'package:multi_store/views/screens/dashborard_components/manage_product_screen.dart';
-import 'package:multi_store/views/screens/dashborard_components/my_store_screen.dart';
 import 'package:multi_store/views/screens/dashborard_components/order_sceen.dart';
 import 'package:multi_store/views/screens/dashborard_components/static_screen.dart';
+import 'package:multi_store/views/screens/main_screens/visit_store.dart';
 import 'package:multi_store/views/widgets/appbar_widget.dart';
 
 import '../../../models/subject/showdialog_widget.dart';
 
-List<Widget> pages = const [
-  MyStoreScreen(),
-  OrderScreen(),
-  EditProfileScreen(),
-  ManageProductScreen(),
-  BalenceScreen(),
-  StaticScreen(),
+List<Widget> pages = [
+  VisitStoreScreen(sId: FirebaseAuth.instance.currentUser!.uid),
+  const OrderScreen(),
+  const EditProfileScreen(),
+  const ManageProductScreen(),
+  const BalenceScreen(),
+  const StaticScreen(),
 ];
 
 List<String> labels = [

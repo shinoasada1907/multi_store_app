@@ -34,7 +34,7 @@ class BagCategory extends StatelessWidget {
                           bags.length - 1,
                           (index) {
                             return SubCateModel(
-                                mainCateName: 'Bags',
+                                mainCateName: 'bags',
                                 subCatename: bags[index + 1],
                                 assetsName: 'assets/images/bags/bags$index.jpg',
                                 cateLabel: bags[index + 1]);

@@ -1,4 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:multi_store/views/screens/galleries/accessory_gallery.dart';
+import 'package:multi_store/views/screens/galleries/bag_gallery.dart';
+import 'package:multi_store/views/screens/galleries/beauty_gallery.dart';
+import 'package:multi_store/views/screens/galleries/electronic_galllery.dart';
+import 'package:multi_store/views/screens/galleries/home_and_garden_gallery.dart';
+import 'package:multi_store/views/screens/galleries/kid_gallery.dart';
+import 'package:multi_store/views/screens/galleries/men_gallery.dart';
+import 'package:multi_store/views/screens/galleries/shoes_gallery.dart';
+import 'package:multi_store/views/screens/galleries/women_gallery.dart';
 import 'package:multi_store/views/widgets/search_widget.dart';
 
 class HomePageScreen extends StatefulWidget {
@@ -14,6 +23,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return DefaultTabController(
       length: 9,
       child: Scaffold(
+        backgroundColor: Colors.blueGrey.shade100.withOpacity(0.5),
         appBar: AppBar(
           backgroundColor: Colors.white,
           title: const SearchWidget(),
@@ -52,15 +62,15 @@ class _HomePageScreenState extends State<HomePageScreen> {
           ),
         ),
         body: const TabBarView(children: [
-          Center(child: Text('Men screen')),
-          Center(child: Text('Women screen')),
-          Center(child: Text('Shoes screen')),
-          Center(child: Text('Bags screen')),
-          Center(child: Text('Electronics screen')),
-          Center(child: Text('Accessories screen')),
-          Center(child: Text('Home & Garden screen')),
-          Center(child: Text('Kids screen')),
-          Center(child: Text('Beauty screen')),
+          MenGalleryScreen(),
+          WomenGalleryScreen(),
+          ShoesGalleryScreen(),
+          BagGalleryScreen(),
+          MenElectronicGalleryScreen(),
+          AccessoriesGalleryScreen(),
+          HomeAndGardenGalleryScreen(),
+          KidsGalleryScreen(),
+          BeautyGalleryScreen(),
         ]),
       ),
     );
