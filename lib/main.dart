@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:multi_store/views/screens/login_screens/customer_login.dart';
-import 'package:multi_store/views/screens/login_screens/customer_signup.dart';
-import 'package:multi_store/views/screens/login_screens/supplier_login.dart';
-import 'package:multi_store/views/screens/login_screens/supplier_signup.dart';
-import 'package:multi_store/views/screens/main_screens/home_screen.dart';
-import 'package:multi_store/views/screens/main_screens/supplier_home_screen.dart';
-import 'package:multi_store/views/screens/main_screens/welcome_screen.dart';
+import 'package:multi_store/screens/login_screens/customer_login.dart';
+import 'package:multi_store/screens/login_screens/customer_signup.dart';
+import 'package:multi_store/screens/login_screens/supplier_login.dart';
+import 'package:multi_store/screens/login_screens/supplier_signup.dart';
+import 'package:multi_store/screens/main_screens/home_screen.dart';
+import 'package:multi_store/screens/main_screens/supplier_home_screen.dart';
+import 'package:multi_store/screens/main_screens/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
