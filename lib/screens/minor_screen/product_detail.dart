@@ -49,11 +49,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late List<dynamic> imagelists = widget.proList['proimages'];
   @override
   Widget build(BuildContext context) {
-    var existingItemWishlist = context
-        .read<Wish>()
-        .getWishItems
-        .firstWhereOrNull(
-            (product) => product.documentId == widget.proList['productid']);
     var existingItemCart = context.read<Cart>().getItems.firstWhereOrNull(
         (product) => product.documentId == widget.proList['productid']);
     return Material(
@@ -162,6 +157,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                             IconButton(
                               onPressed: () {
+                                var existingItemWishlist = context
+                                    .read<Wish>()
+                                    .getWishItems
+                                    .firstWhereOrNull((product) =>
+                                        product.documentId ==
+                                        widget.proList['productid']);
                                 existingItemWishlist != null
                                     ? context.read<Wish>().removeThisItem(
                                         widget.proList['productid'])
@@ -309,16 +310,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           );
                         },
                         icon: Badge(
+                            showBadge: context.read<Cart>().getItems.isEmpty
+                                ? false
+                                : true,
+                            padding: const EdgeInsets.all(4),
+                            badgeColor: Colors.lightBlue,
                             badgeContent: Text(
                               context.watch<Cart>().getItems.length.toString(),
-                              style: const TextStyle(color: Colors.white),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             child: const Icon(Icons.shopping_cart)),
                       ),
                     ],
                   ),
                   YellowButton(
-                    name: 'ADD TO CART',
+                    name: existingItemCart != null
+                        ? 'added to cart'
+                        : 'ADD TO CART',
                     width: 0.55,
                     onPressed: () {
                       existingItemCart != null
