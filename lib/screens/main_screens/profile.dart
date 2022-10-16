@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_store/models/subject/showdialog_widget.dart';
+import 'package:multi_store/widgets/showdialog_widget.dart';
 import 'package:multi_store/screens/customer_screens/customer_order_screen.dart';
 import 'package:multi_store/screens/customer_screens/wishlist.dart';
 import 'package:multi_store/screens/main_screens/cart_sceens.dart';

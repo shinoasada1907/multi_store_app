@@ -10,7 +10,7 @@ import 'package:multi_store/screens/dashborard_components/static_screen.dart';
 import 'package:multi_store/screens/main_screens/visit_store.dart';
 import 'package:multi_store/widgets/appbar_widget.dart';
 
-import '../../models/subject/showdialog_widget.dart';
+import '../../widgets/showdialog_widget.dart';
 
 List<Widget> pages = [
   VisitStoreScreen(sId: FirebaseAuth.instance.currentUser!.uid),
