@@ -1,10 +1,10 @@
 // ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:multi_store/screens/minor_screen/place_order.dart';
 import 'package:multi_store/widgets/showdialog_widget.dart';
 import 'package:multi_store/providers/cart_provider.dart';
 import 'package:multi_store/widgets/appbar_widget.dart';
-import 'package:multi_store/widgets/yellowbutton_widget.dart';
 import 'package:provider/provider.dart';
 import '../../models/cart_model.dart';
 
@@ -19,6 +19,7 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
+    double total = context.watch<Cart>().totalPrice;
     return Material(
       child: SafeArea(
         child: Scaffold(
@@ -77,7 +78,7 @@ class _CartScreenState extends State<CartScreen> {
                       style: TextStyle(fontSize: 18),
                     ),
                     Text(
-                      context.watch<Cart>().totalPrice.toStringAsFixed(2),
+                      total.toStringAsFixed(2),
                       style: const TextStyle(
                         fontSize: 20,
                         color: Colors.red,
@@ -86,11 +87,30 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ],
                 ),
-                YellowButton(
-                  name: 'Check out',
-                  width: 0.45,
-                  onPressed: () {},
-                ),
+                Container(
+                  height: 35,
+                  width: MediaQuery.of(context).size.width * 0.45,
+                  decoration: BoxDecoration(
+                    color: Colors.amberAccent,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: MaterialButton(
+                    onPressed: total == 0.0
+                        ? null
+                        : () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PlaceOrderScreen(),
+                              ),
+                            );
+                          },
+                    child: const Text(
+                      'Check out',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                )
               ],
             ),
           ),

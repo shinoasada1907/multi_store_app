@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store/screens/main_screens/cart_sceens.dart';
@@ -5,6 +6,9 @@ import 'package:multi_store/screens/main_screens/categories_screen.dart';
 import 'package:multi_store/screens/main_screens/home_page_screen.dart';
 import 'package:multi_store/screens/main_screens/profile.dart';
 import 'package:multi_store/screens/main_screens/stores_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/cart_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -35,24 +39,36 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: Colors.lightBlue,
         unselectedItemColor: Colors.black,
         currentIndex: _selecteditem,
-        items: const [
-          BottomNavigationBarItem(
+        items: [
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.shop),
             label: 'Stores',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
+            icon: Badge(
+                showBadge: context.read<Cart>().getItems.isEmpty ? false : true,
+                padding: const EdgeInsets.all(4),
+                badgeColor: Colors.lightBlue,
+                badgeContent: Text(
+                  context.watch<Cart>().getItems.length.toString(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                child: const Icon(Icons.shopping_cart)),
             label: 'Cart',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),

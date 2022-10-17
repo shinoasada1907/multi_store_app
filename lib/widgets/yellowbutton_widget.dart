@@ -14,7 +14,7 @@ class YellowButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 35,
+      height: 40,
       width: MediaQuery.of(context).size.width * width,
       decoration: BoxDecoration(
         color: Colors.amberAccent,
