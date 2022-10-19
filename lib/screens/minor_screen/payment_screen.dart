@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, avoid_print
+// ignore_for_file: unused_local_variable, avoid_print, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +8,8 @@ import 'package:multi_store/providers/cart_provider.dart';
 import 'package:multi_store/widgets/appbar_widget.dart';
 import 'package:multi_store/widgets/yellowbutton_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
+import 'package:uuid/uuid.dart';
 
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
@@ -18,9 +20,16 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   int selectedValue = 1;
-
+  late String orderId;
   CollectionReference customer =
       FirebaseFirestore.instance.collection('customers');
+
+  void showProgress() {
+    ProgressDialog progress = ProgressDialog(context: context);
+    progress.show(
+        max: 100, msg: 'Please wait ...', progressBgColor: Colors.red);
+  }
+
   @override
   Widget build(BuildContext context) {
     double totalPrice = context.watch<Cart>().totalPrice;
@@ -266,7 +275,67 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                         name:
                                             'Confirm ${totalPaid.toStringAsFixed(2)} \$',
                                         width: 0.9,
-                                        onPressed: () {},
+                                        onPressed: () async {
+                                          showProgress();
+                                          for (var item in context
+                                              .read<Cart>()
+                                              .getItems) {
+                                            CollectionReference orderRef =
+                                                FirebaseFirestore.instance
+                                                    .collection('orders');
+                                            orderId = const Uuid().v4();
+                                            await orderRef.doc(orderId).set({
+                                              'cid': data['cid'],
+                                              'custname': data['name'],
+                                              'email': data['email'],
+                                              'address': data['address'],
+                                              'phone': data['phone'],
+                                              'prrofileimage':
+                                                  data['profileimage'],
+                                              'sid': item.suppId,
+                                              'proid': item.documentId,
+                                              'orderid': orderId,
+                                              'ordername': item.name,
+                                              'orderimage':
+                                                  item.imagesUrl.first,
+                                              'orderqty': item.qty,
+                                              'orderprice':
+                                                  item.qty * item.price,
+                                              'deliverystatus': 'preparing',
+                                              'deliverydate': '',
+                                              'orderdate': DateTime.now(),
+                                              'paymenystatus':
+                                                  'cash on delivery',
+                                              'orderreview': false,
+                                            }).whenComplete(() async {
+                                              await FirebaseFirestore.instance
+                                                  .runTransaction(
+                                                      (transaction) async {
+                                                DocumentReference
+                                                    documentReference =
+                                                    FirebaseFirestore.instance
+                                                        .collection('products')
+                                                        .doc(item.documentId);
+                                                DocumentSnapshot snapshot1 =
+                                                    await transaction
+                                                        .get(documentReference);
+                                                transaction.update(
+                                                  documentReference,
+                                                  {
+                                                    'instock':
+                                                        snapshot1['instock'] -
+                                                            item.qty,
+                                                  },
+                                                );
+                                              });
+                                            });
+                                          }
+                                          context.read<Cart>().clearCart();
+                                          Navigator.popUntil(
+                                              context,
+                                              ModalRoute.withName(
+                                                  '/user_screen'));
+                                        },
                                       ),
                                     ],
                                   ),
