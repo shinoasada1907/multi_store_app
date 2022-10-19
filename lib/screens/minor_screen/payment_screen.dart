@@ -304,7 +304,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                               'deliverystatus': 'preparing',
                                               'deliverydate': '',
                                               'orderdate': DateTime.now(),
-                                              'paymenystatus':
+                                              'paymentstatus':
                                                   'cash on delivery',
                                               'orderreview': false,
                                             }).whenComplete(() async {

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_store/models/customer_order_model.dart';
 import 'package:multi_store/widgets/appbar_widget.dart';
 
 class CustomerOrderScreen extends StatelessWidget {
@@ -51,17 +52,7 @@ class CustomerOrderScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
-              var order = snapshot.data!.docs[index];
-              return ExpansionTile(
-                  title: Row(
-                children: [
-                  Container(
-                    constraints:
-                        const BoxConstraints(maxHeight: 80, maxWidth: 80),
-                    child: Image.network(order['orderimage']),
-                  )
-                ],
-              ));
+              return CustomerOrderModel(order: snapshot.data!.docs[index]);
             },
           );
         },
