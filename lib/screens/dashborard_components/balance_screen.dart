@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_store/widgets/yellowbutton_widget.dart';
 import '../../widgets/appbar_widget.dart';
 
 class BalenceScreen extends StatelessWidget {
