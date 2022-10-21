@@ -14,7 +14,7 @@ import '../../widgets/showdialog_widget.dart';
 
 List<Widget> pages = [
   VisitStoreScreen(sId: FirebaseAuth.instance.currentUser!.uid),
-  const OrderScreen(),
+  const SupplierOrderScreen(),
   const EditProfileScreen(),
   const ManageProductScreen(),
   const BalenceScreen(),
