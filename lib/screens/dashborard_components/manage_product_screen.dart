@@ -1,5 +1,3 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +11,7 @@ class ManageProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Stream<QuerySnapshot> _productStream = FirebaseFirestore.instance
+    final Stream<QuerySnapshot> productStream = FirebaseFirestore.instance
         .collection('products')
         .where('sid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .snapshots();
@@ -27,7 +25,7 @@ class ManageProductScreen extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: _productStream,
+        stream: productStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Text('Something went wrong');

@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable, no_leading_underscores_for_local_identifiers
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +21,7 @@ class _VisitStoreScreenState extends State<VisitStoreScreen> {
   Widget build(BuildContext context) {
     CollectionReference suppliers =
         FirebaseFirestore.instance.collection('suppliers');
-    final Stream<QuerySnapshot> _productStream = FirebaseFirestore.instance
+    final Stream<QuerySnapshot> productStream = FirebaseFirestore.instance
         .collection('products')
         .where('sid', isEqualTo: widget.sId)
         .snapshots();
@@ -162,7 +160,7 @@ class _VisitStoreScreenState extends State<VisitStoreScreen> {
             body: Padding(
               padding: const EdgeInsets.all(5.0),
               child: StreamBuilder<QuerySnapshot>(
-                stream: _productStream,
+                stream: productStream,
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {

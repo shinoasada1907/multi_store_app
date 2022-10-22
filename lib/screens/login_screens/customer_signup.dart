@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -111,7 +109,9 @@ class _CustomerRegisterState extends State<CustomerRegister> {
           setState(() {
             _imageFile = null;
           });
-          await Navigator.pushReplacementNamed(context, '/customer_login');
+          await Future.delayed(const Duration(microseconds: 100)).whenComplete(
+              () async => await Navigator.pushReplacementNamed(
+                  context, '/customer_login'));
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
             setState(() {

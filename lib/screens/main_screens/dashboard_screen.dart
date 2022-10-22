@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store/screens/dashborard_components/balance_screen.dart';
@@ -60,8 +58,11 @@ class DashboardScreen extends StatelessWidget {
                 tabNo: () => Navigator.pop(context),
                 tabYes: () async {
                   await FirebaseAuth.instance.signOut();
-                  Navigator.pop(context);
-                  Navigator.pushReplacementNamed(context, '/welcome_screen');
+                  await Future.delayed(const Duration(microseconds: 100))
+                      .whenComplete(() {
+                    Navigator.pop(context);
+                    Navigator.pushReplacementNamed(context, '/welcome_screen');
+                  });
                 },
               );
             },

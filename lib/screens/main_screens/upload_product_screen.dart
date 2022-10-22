@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print, duplicate_ignore, sort_child_properties_last, depend_on_referenced_packages
-
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,6 +27,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   late String proName;
   late String proDesc;
   late String proId;
+  int? discount = 0;
 
   String mainCateValue = 'select category';
   String subCateValue = 'subcategory';
@@ -37,7 +36,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   final ImagePicker _picker = ImagePicker();
   List<XFile>? imageFileList = [];
   List<String> imageUrlList = [];
-  dynamic _pickedImageError;
+  dynamic pickedImageError;
 
   bool processing = false;
 
@@ -50,9 +49,9 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
       });
     } catch (e) {
       setState(() {
-        _pickedImageError = e;
+        pickedImageError = e;
       });
-      print(_pickedImageError);
+      // print(pickedImageError);
     }
   }
 
@@ -77,7 +76,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
             });
           }
         } catch (e) {
-          print(e);
+          // print(e);
         }
       } else {
         MessageHandler.showSnackSar(_scaffoldKey, 'Please pick images');
@@ -104,7 +103,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
         'prodesc': proDesc,
         'sid': FirebaseAuth.instance.currentUser!.uid,
         'proimages': imageUrlList,
-        'discount': 0
+        'discount': discount,
       }).whenComplete(() {
         setState(() {
           processing = false;
@@ -116,7 +115,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
         _formKey.currentState!.reset();
       });
     } else {
-      print('No Image');
+      // print('No Image');
     }
   }
 
@@ -226,8 +225,8 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                                           .map<DropdownMenuItem<String>>(
                                               (value) {
                                         return DropdownMenuItem(
-                                          child: Text(value),
                                           value: value,
+                                          child: Text(value),
                                         );
                                       }).toList(),
                                       onChanged: (String? value) {
@@ -257,8 +256,8 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                                           .map<DropdownMenuItem<String>>(
                                               (value) {
                                         return DropdownMenuItem(
-                                          child: Text(value),
                                           value: value,
+                                          child: Text(value),
                                         );
                                       }).toList(),
                                       onChanged: (String? value) {
@@ -283,28 +282,56 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                       thickness: 1.5,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.38,
-                      child: TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter price';
-                          } else if (value.isValidPrice() != true) {
-                            return 'not valid price';
-                          }
-                          return null;
-                        },
-                        onSaved: (newValue) {
-                          price = double.parse(newValue!);
-                        },
-                        decoration: textFormDecoration1.copyWith(
-                          labelText: 'Price',
-                          hintText: 'Price .. \$',
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.38,
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter price';
+                              } else if (value.isValidPrice() != true) {
+                                return 'invalid price';
+                              }
+                              return null;
+                            },
+                            onSaved: (newValue) {
+                              price = double.parse(newValue!);
+                            },
+                            decoration: textFormDecoration1.copyWith(
+                              labelText: 'Price',
+                              hintText: 'Price .. \$',
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.38,
+                          child: TextFormField(
+                            maxLength: 2,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return null;
+                              } else if (value.isValidDiscount() != true) {
+                                return 'invalid discount';
+                              }
+                              return null;
+                            },
+                            onSaved: (newValue) {
+                              discount = int.parse(newValue!);
+                            },
+                            decoration: textFormDecoration1.copyWith(
+                              labelText: 'Discount',
+                              hintText: 'Discount .. %',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -315,7 +342,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                           if (value!.isEmpty) {
                             return 'Please enter quantity';
                           } else if (value.isValidQuantity() != true) {
-                            return 'not valid Quantity';
+                            return 'invalid Quantity';
                           }
                           return null;
                         },
@@ -446,5 +473,11 @@ extension PriceValidator on String {
   bool isValidPrice() {
     return RegExp(r'^((([1-9][0-9]*[\.]*)||([0][\.]*))([0-9]{1,2}))$')
         .hasMatch(this);
+  }
+}
+
+extension DiscountValidator on String {
+  bool isValidDiscount() {
+    return RegExp(r'^([0-9]*)$').hasMatch(this);
   }
 }

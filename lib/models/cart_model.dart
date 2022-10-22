@@ -1,5 +1,3 @@
-// ignore_for_file: depend_on_referenced_packages, use_build_context_synchronously
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -113,10 +111,16 @@ class CartModel extends StatelessWidget {
                                                                   .documentId,
                                                               product.suppId,
                                                             );
-                                                    context
-                                                        .read<Cart>()
-                                                        .removeItem(product);
-                                                    Navigator.pop(context);
+                                                    await Future.delayed(
+                                                            const Duration(
+                                                                microseconds:
+                                                                    100))
+                                                        .whenComplete(() {
+                                                      context
+                                                          .read<Cart>()
+                                                          .removeItem(product);
+                                                      Navigator.pop(context);
+                                                    });
                                                   },
                                                   child: const Text(
                                                       'Move to Wishlist'),

@@ -1,5 +1,3 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store/widgets/appbar_widget.dart';
@@ -22,7 +20,7 @@ class SubCateScreen extends StatefulWidget {
 class _SubCateScreenState extends State<SubCateScreen> {
   @override
   Widget build(BuildContext context) {
-    final Stream<QuerySnapshot> _productStream = FirebaseFirestore.instance
+    final Stream<QuerySnapshot> productStream = FirebaseFirestore.instance
         .collection('products')
         .where('maincateg', isEqualTo: widget.maincateName)
         .where('subcateg', isEqualTo: widget.subcateName)
@@ -37,7 +35,7 @@ class _SubCateScreenState extends State<SubCateScreen> {
         title: TitleAppbar(title: widget.subcateName),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: _productStream,
+        stream: productStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Text('Something went wrong');

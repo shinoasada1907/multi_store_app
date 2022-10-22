@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store/widgets/snackbar.dart';
@@ -33,8 +31,8 @@ class _CustomerLoginState extends State<CustomerLogin> {
             .signInWithEmailAndPassword(email: email, password: password);
 
         _formKey.currentState!.reset();
-
-        Navigator.pushReplacementNamed(context, '/user_screen');
+        await Future.delayed(const Duration(microseconds: 100)).whenComplete(
+            () => Navigator.pushReplacementNamed(context, '/user_screen'));
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           setState(() {

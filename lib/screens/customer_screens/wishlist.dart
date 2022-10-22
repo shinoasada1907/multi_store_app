@@ -1,5 +1,3 @@
-// ignore_for_file: depend_on_referenced_packages, avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:multi_store/providers/wishlist_provider.dart';
 import 'package:multi_store/widgets/appbar_widget.dart';

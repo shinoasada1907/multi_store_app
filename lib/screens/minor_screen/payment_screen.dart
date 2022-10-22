@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable, avoid_print, use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -330,11 +328,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                               });
                                             });
                                           }
-                                          context.read<Cart>().clearCart();
-                                          Navigator.popUntil(
-                                              context,
-                                              ModalRoute.withName(
-                                                  '/user_screen'));
+                                          await Future.delayed(const Duration(
+                                                  microseconds: 100))
+                                              .whenComplete(
+                                            () {
+                                              context.read<Cart>().clearCart();
+                                              Navigator.popUntil(
+                                                  context,
+                                                  ModalRoute.withName(
+                                                      '/user_screen'));
+                                            },
+                                          );
                                         },
                                       ),
                                     ],
@@ -343,9 +347,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               ),
                             );
                           } else if (selectedValue == 2) {
-                            print('Visa');
+                            // print('Visa');
                           } else if (selectedValue == 3) {
-                            print('Paypal');
+                            // print('Paypal');
                           }
                           // print(selectedValue);
                         },

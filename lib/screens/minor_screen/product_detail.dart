@@ -1,5 +1,3 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers, sort_child_properties_last, depend_on_referenced_packages, unused_local_variable
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +47,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late List<dynamic> imagelists = widget.proList['proimages'];
   @override
   Widget build(BuildContext context) {
+    var onSale = widget.proList['discount'];
     var existingItemCart = context.read<Cart>().getItems.firstWhereOrNull(
         (product) => product.documentId == widget.proList['productid']);
     return Material(
@@ -90,6 +89,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           top: 20,
                           left: 15,
                           child: CircleAvatar(
+                            backgroundColor: Colors.lightBlue,
                             child: IconButton(
                               onPressed: () {
                                 Navigator.pop(context);
@@ -99,13 +99,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 color: Colors.black,
                               ),
                             ),
-                            backgroundColor: Colors.lightBlue,
                           ),
                         ),
                         Positioned(
                           top: 20,
                           right: 15,
                           child: CircleAvatar(
+                            backgroundColor: Colors.lightBlue,
                             child: IconButton(
                               onPressed: () {},
                               icon: const Icon(
@@ -113,7 +113,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 color: Colors.black,
                               ),
                             ),
-                            backgroundColor: Colors.lightBlue,
                           ),
                         ),
                       ],
@@ -138,7 +137,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             Row(
                               children: [
                                 const Text(
-                                  ' USD ',
+                                  'USD ',
                                   style: TextStyle(
                                     color: Colors.red,
                                     fontSize: 16,
@@ -147,12 +146,34 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ),
                                 Text(
                                   widget.proList['price'].toStringAsFixed(2),
-                                  style: const TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: onSale != 0
+                                      ? const TextStyle(
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          color: Colors.grey,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600)
+                                      : const TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                 ),
+                                const SizedBox(
+                                  width: 6,
+                                ),
+                                onSale != 0
+                                    ? Text(
+                                        ((1 - (onSale / 100)) *
+                                                widget.proList['price'])
+                                            .toStringAsFixed(2),
+                                        style: const TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      )
+                                    : const Text(''),
                               ],
                             ),
                             IconButton(
@@ -168,7 +189,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         widget.proList['productid'])
                                     : context.read<Wish>().addWishItems(
                                           widget.proList['proname'],
-                                          widget.proList['price'],
+                                          onSale != 0
+                                              ? ((1 - (onSale / 100)) *
+                                                  widget.proList['price'])
+                                              : widget.proList['price'],
                                           1,
                                           widget.proList['instock'],
                                           widget.proList['proimages'],
@@ -350,7 +374,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       } else {
                         context.read<Cart>().addItems(
                               widget.proList['proname'],
-                              widget.proList['price'],
+                              onSale != 0
+                                  ? ((1 - (onSale / 100)) *
+                                      widget.proList['price'])
+                                  : widget.proList['price'],
                               1,
                               widget.proList['instock'],
                               widget.proList['proimages'],
