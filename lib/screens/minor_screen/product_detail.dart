@@ -1,5 +1,8 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:multi_store/providers/wishlist_provider.dart';
@@ -9,7 +12,7 @@ import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
 import 'package:multi_store/providers/cart_provider.dart';
 import 'package:multi_store/screens/main_screens/cart_sceens.dart';
-import 'package:multi_store/screens/main_screens/visit_store.dart';
+import 'package:multi_store/screens/minor_screen/visit_store.dart';
 import 'package:multi_store/screens/minor_screen/full_screen_view.dart';
 import 'package:multi_store/widgets/appbar_widget.dart';
 import 'package:multi_store/widgets/snackbar.dart';
@@ -33,14 +36,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       .where('subcateg', isEqualTo: widget.proList['subcateg'])
       .snapshots();
 
-  // late var existingItemWishlist = context
-  //     .read<Wish>()
-  //     .getWishItems
-  //     .firstWhereOrNull(
-  //         (product) => product.documentId == widget.proList['productid']);
-
-  // late var existingItemCart = context.read<Cart>().getItems.firstWhereOrNull(
-  //     (product) => product.documentId == widget.proList['productid']);
+  late final Stream<QuerySnapshot> reviewProduct = FirebaseFirestore.instance
+      .collection('products')
+      .doc(widget.proList['productid'])
+      .collection('reviews')
+      .snapshots();
 
   final GlobalKey<ScaffoldMessengerState> scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
@@ -248,6 +248,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             color: Colors.blueGrey.shade800,
                           ),
                         ),
+                        Stack(
+                          children: [
+                            const Positioned(
+                              right: 50,
+                              top: 15,
+                              child: Text('total'),
+                            ),
+                            ExpandableTheme(
+                              data: const ExpandableThemeData(
+                                iconColor: Colors.lightBlue,
+                                iconSize: 30,
+                              ),
+                              child: reviews(reviewProduct),
+                            ),
+                          ],
+                        ),
                         const ProductDetailHeader(
                           header: '   Similar Items   ',
                         ),
@@ -436,4 +452,92 @@ class ProductDetailHeader extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget reviews(var reviewProduct) {
+  return ExpandablePanel(
+    header: const Padding(
+      padding: EdgeInsets.all(10),
+      child: Text(
+        'Reviews',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 24,
+          color: Colors.lightBlue,
+        ),
+      ),
+    ),
+    collapsed: SizedBox(
+      height: 230,
+      child: ReviewAll(reviewProduct),
+    ),
+    expanded: ReviewAll(reviewProduct),
+  );
+}
+
+Widget ReviewAll(var reviewProduct) {
+  return StreamBuilder<QuerySnapshot>(
+    stream: reviewProduct,
+    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot2) {
+      if (snapshot2.hasError) {
+        return const Text('Something went wrong');
+      }
+
+      if (snapshot2.connectionState == ConnectionState.waiting) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+
+      if (snapshot2.data!.docs.isEmpty) {
+        return Center(
+          child: Text(
+            'This is not reviews',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: Colors.blueGrey.shade600,
+              fontFamily: 'Acme',
+              letterSpacing: 1.5,
+            ),
+          ),
+        );
+      }
+
+      return ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: snapshot2.data!.docs.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(
+                snapshot2.data!.docs[index]['profileimage'],
+              ),
+            ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(snapshot2.data!.docs[index]['name']),
+                Row(
+                  children: [
+                    Text(snapshot2.data!.docs[index]['rate'].toString()),
+                    const Icon(
+                      Icons.star,
+                      color: Colors.yellow,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            subtitle: Text(
+              snapshot2.data!.docs[index]['comment'],
+              style: const TextStyle(fontSize: 15),
+            ),
+          );
+        },
+      );
+    },
+  );
 }

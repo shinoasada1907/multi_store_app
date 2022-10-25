@@ -5,7 +5,7 @@ import 'package:multi_store/screens/dashborard_components/edit_profile_screen.da
 import 'package:multi_store/screens/dashborard_components/manage_product_screen.dart';
 import 'package:multi_store/screens/dashborard_components/order_sceen.dart';
 import 'package:multi_store/screens/dashborard_components/static_screen.dart';
-import 'package:multi_store/screens/main_screens/visit_store.dart';
+import 'package:multi_store/screens/minor_screen/visit_store.dart';
 import 'package:multi_store/widgets/appbar_widget.dart';
 
 import '../../widgets/showdialog_widget.dart';
