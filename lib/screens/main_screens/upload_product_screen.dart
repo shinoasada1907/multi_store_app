@@ -59,6 +59,8 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (imageFileList!.isNotEmpty) {
+        // if (mainCateValue == 'select category' &&
+        //     subCateValue == 'subcategory') {
         //thực hiện tạo vòng lập để add hình ảnh lên storage trên firebase
         setState(() {
           processing = true;
@@ -78,6 +80,9 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
         } catch (e) {
           // print(e);
         }
+        // } else {
+        //   MessageHandler.showSnackSar(_scaffoldKey, 'Please select categories');
+        // }
       } else {
         MessageHandler.showSnackSar(_scaffoldKey, 'Please pick images');
       }
@@ -231,6 +236,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                                       }).toList(),
                                       onChanged: (String? value) {
                                         selectcatagory(value);
+                                        print(mainCateValue);
                                       },
                                     ),
                                   ],
@@ -263,6 +269,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                                       onChanged: (String? value) {
                                         setState(() {
                                           subCateValue = value!;
+                                          print(subCateValue);
                                         });
                                       },
                                     ),
