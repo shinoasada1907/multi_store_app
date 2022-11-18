@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_store/screens/auth/forgotpassword.dart';
 import 'package:multi_store/widgets/snackbar.dart';
 
 import '../../widgets/auth_widget.dart';
@@ -137,7 +138,12 @@ class _SupplierLoginState extends State<SupplierLogin> {
                         ),
                       ),
                       TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const ForgotPass()));
+                          },
                           child: const Text(
                             'Forget password ?',
                             style: TextStyle(
