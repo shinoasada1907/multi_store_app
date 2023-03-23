@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badeges;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_store/screens/main_screens/cart_sceens.dart';
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
             label: 'Stores',
           ),
           BottomNavigationBarItem(
-            icon: Badge(
+            icon: badeges.Badge(
                 showBadge: context.read<Cart>().getItems.isEmpty ? false : true,
                 padding: const EdgeInsets.all(4),
                 badgeColor: Colors.lightBlue,

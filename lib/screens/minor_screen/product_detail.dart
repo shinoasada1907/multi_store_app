@@ -17,7 +17,7 @@ import 'package:multi_store/screens/minor_screen/full_screen_view.dart';
 import 'package:multi_store/widgets/appbar_widget.dart';
 import 'package:multi_store/widgets/snackbar.dart';
 import 'package:multi_store/widgets/yellowbutton_widget.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badeges;
 
 import '../../models/product_model.dart';
 
@@ -357,7 +357,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                           );
                         },
-                        icon: Badge(
+                        icon: badeges.Badge(
                             showBadge: context.read<Cart>().getItems.isEmpty
                                 ? false
                                 : true,
