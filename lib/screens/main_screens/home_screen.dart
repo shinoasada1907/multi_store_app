@@ -55,8 +55,10 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: badeges.Badge(
                 showBadge: context.read<Cart>().getItems.isEmpty ? false : true,
-                padding: const EdgeInsets.all(4),
-                badgeColor: Colors.lightBlue,
+                badgeStyle: const badeges.BadgeStyle(
+                  padding: EdgeInsets.all(4),
+                  badgeColor: Colors.lightBlue,
+                ),
                 badgeContent: Text(
                   context.watch<Cart>().getItems.length.toString(),
                   style: const TextStyle(

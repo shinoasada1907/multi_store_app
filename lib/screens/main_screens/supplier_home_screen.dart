@@ -66,8 +66,10 @@ class _SupplierHomePageState extends State<SupplierHomePage> {
               BottomNavigationBarItem(
                 icon: badeges.Badge(
                   showBadge: snapshot.data!.docs.isEmpty ? false : true,
-                  padding: const EdgeInsets.all(4),
-                  badgeColor: Colors.red,
+                  badgeStyle: const badeges.BadgeStyle(
+                    padding: EdgeInsets.all(4),
+                    badgeColor: Colors.red,
+                  ),
                   badgeContent: Text(
                     snapshot.data!.docs.length.toString(),
                     style: const TextStyle(
